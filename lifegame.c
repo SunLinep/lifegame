@@ -2,11 +2,6 @@
 #include <SDL2/SDL.h>
 #include <string.h>
 
-
-
-
-
-
 int nextchoice = 0;
 
 //Determine if the cell is alive or dead
