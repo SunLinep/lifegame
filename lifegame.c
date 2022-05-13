@@ -51,10 +51,6 @@ void judgeinput(int opt){
     
 }
 
-
-
-
-
 void drawline(SDL_Window *window, SDL_Surface *screen, int x, int y){
     int i;
     for(i = 0; i <= x; i++){
