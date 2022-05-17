@@ -5,9 +5,10 @@
 //opt: 1 keystrokes
 //Press the right mouse button: return 1
 //Press keyboard: return 0
-int judgeinput(int opt, int num){
+//Press esc: return -1
+int judgeinput(int opt, int num, int time){
     if(opt == 0){
-        SDL_Delay(1000);
+        SDL_Delay(time*1000);
     }else if(opt == 1){
         while(1){
             //KeyboardState
@@ -17,13 +18,13 @@ int judgeinput(int opt, int num){
             //DOWN;RIGHT: NEXT
             //ESC: esc
             if(num == 0){
-                Uint32 buttons = SDL_GetMouseState(&x, &y);
+                Uint32 buttons = SDL_GetMouseState(&mousex, &mousey);
                 //buttons: MouseState
                 if((buttons & SDL_BUTTON_LMASK) != 0){
                     //Press the right mouse button
                     //Example Delete the stacked event
                     while(1){
-                        Uint32 button = SDL_GetMouseState(&x, &y);
+                        Uint32 button = SDL_GetMouseState(&mousex, &mousey);
                         SDL_PumpEvents();
                         if((button & SDL_BUTTON_LMASK) != 0) continue;
                         else break;
@@ -53,11 +54,11 @@ int judgeinput(int opt, int num){
                 break;
             }else if(state[SDL_SCANCODE_ESCAPE]){
                 //Press the Esc key on the keyboard
-                exit(0);
+                return -1;
             }
         }
-        return 0;
     }
+    return 0;
 }
 
 //Draw border lines
@@ -84,15 +85,15 @@ void drawline(SDL_Window *window, SDL_Surface *screen, int x, int y){
 }
 
 //Draw a cell map
-//num 0: living cell
-//num 1: dead cell
+//num 1: living cell
+//num 0: dead cell
 void drawrectangle(SDL_Window *window, SDL_Surface *screen, int x, int y, int num){
     //rectangular
     SDL_Rect rect = {x,y,100,100};
     //black color
-    if(num == 0) SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, 0, 0, 0));
+    if(num == 1) SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, 0, 0, 0));
     //white color
-    if(num == 1) SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format,0xFF,0xFF,0xFF));
+    if(num == 0) SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format,0xFF,0xFF,0xFF));
     //update surface
     SDL_UpdateWindowSurface(window);
 }

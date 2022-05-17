@@ -15,4 +15,7 @@ int init(int* row, int *column, char* filename);
 int opt(void);
 
 void commandline(int ac, char *av[], int *step, char *filename);
+
+void writefile(char* filename, int row, int column, int* start[]);
+
 #endif //SHARE_LIFEGAME_H

@@ -32,7 +32,17 @@ int main(int argc, char *argv[]){
     //life columnsize
     int MAXcolumn;
     //get cell map's row, column and delay time
-    init(&MAXrow, &MAXcolumn, filename);
+    i = init(&MAXrow, &MAXcolumn, filename);
+    if(i == 0){
+        printf("There is no file!\n");
+        return 0;
+    }else if(i == -1){
+        printf("The file is null!\n");
+        return 0;
+    }else if(i == -2){
+        printf("This is a wrong file!\n");
+        return 0;
+    }
     //The initial state
     int **start = (int **)malloc(MAXrow* sizeof(int *));
     //Next state
@@ -56,24 +66,29 @@ int main(int argc, char *argv[]){
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,0xFF,0xFF,0xFF));
     SDL_UpdateWindowSurface(window);
     //Initializing an array and UI
+    fgets(a, 250, fp);
     for(j = 0; fgets(a, 250, fp) != NULL; j++){
         start[j] = (int *)malloc(sizeof(int) * MAXcolumn);
         memset(start[j], 0, sizeof(start[j]));
         for(i = 0; i < strlen(a) && a[i] != '\r' && a[i] != '\n'; i++){
             if(a[i] != '1' && a[i] != '0') return -3;
             start[j][i] = a[i] - '0';
-            if(start[j][i]==1) drawrectangle(window, screen, 100 * i, j * 100, 0);
+            if(start[j][i]==1) drawrectangle(window, screen, 100 * i, j * 100, 1);
         }
     }
     drawline(window, screen, MAXcolumn, MAXrow);
-    while(judgeinput(1, 0)){
+    while(i=judgeinput(1, 0, delay)){
+        if(i == -1){
+            writefile(filename, MAXrow, MAXcolumn,  start);
+            return 0;
+        }
         if(mousex%100 == 0 || mousey%100 == 0) continue;
         if(start[mousey/100][mousex/100] == 0){
-            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 0);
+            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 1);
             drawline(window, screen, MAXcolumn, MAXrow);
             start[mousey/100][mousex/100] = 1;
         }else if(start[mousey/100][mousex/100] == 1){
-            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 1);
+            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 0);
             drawline(window, screen, MAXcolumn, MAXrow);
             start[mousey/100][mousex/100] = 0;
         }
@@ -86,9 +101,12 @@ int main(int argc, char *argv[]){
         memset(temp[i], 0, sizeof(temp[i]));
     }
     while(1){
-        if(step != -100 && step <= 0) break;
-        //SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,0xFF,0xFF,0xFF));
-        //SDL_UpdateWindowSurface(window);
+        if(step != -100 && step <= 0) {
+            writefile(filename, MAXrow, MAXcolumn,  start);
+            break;
+        }
+        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,0xFF,0xFF,0xFF));
+        SDL_UpdateWindowSurface(window);
         //Deal with the four corners
         next[0][0] = cell(start[0][0], start[0][1]+start[1][0]+start[1][1]);
         next[MAXrow-1][0] = cell(start[MAXrow-1][0], start[MAXrow-1][1]+start[MAXrow-2][0]+start[MAXrow-2][1]);
@@ -109,32 +127,36 @@ int main(int argc, char *argv[]){
                 next[i][j] = cell(start[i][j],start[i-1][j]+start[i+1][j]+start[i][j-1]+start[i][j+1]+start[i-1][j-1]+start[i+1][j-1]+start[i+1][j+1]+start[i-1][j+1]);
             }
         }
-        //Write the result to a file
-        fp = fopen("copy.txt", "w");
         for(i = 0, sum = 0; i < MAXrow; i++){
             for(j = 0; j < MAXcolumn; j++){
                 temp[i][j] = start[i][j];
                 if((start[i][j] = next[i][j])==1){
-                    drawrectangle(window, screen, 100 * j, i * 100, 0);
+                    drawrectangle(window, screen, 100 * j, i * 100, 1);
                     sum++;
                 }
-                fprintf(fp,"%d",start[i][j]);
             }
-            fprintf(fp,"\n");
             memset(next[i], 0, sizeof(next[i]));
         }
-        fclose(fp);
         drawline(window, screen, MAXcolumn, MAXrow);
-        judgeinput(nextoption, 1);
+        if(judgeinput(nextoption, 1,delay)==-1){
+            writefile(filename, MAXrow, MAXcolumn,  start);
+            return 0;
+        }
         //If all cells die, exit
-        if(sum == 0) break;
+        if(sum == 0) {
+            writefile(filename, MAXrow, MAXcolumn,  start);
+            break;
+        }
         //If cell balance is not iterated, exit
         for(i = 0, sum = 0; i < MAXrow; i++){
             for(j = 0; j < MAXcolumn; j++){
                 if(temp[i][j] == start[i][j]) sum++;
             }
         }
-        if(sum == MAXrow*MAXcolumn) break;
+        if(sum == MAXrow*MAXcolumn) {
+            writefile(filename, MAXrow, MAXcolumn,  start);
+            break;
+        }
         if(step != -100){
             //In each iteration, step - 1
             step--;
@@ -143,7 +165,7 @@ int main(int argc, char *argv[]){
     //free malloc
     free(start);
     free(next);
-    free(temp)
+    free(temp);
     //destroy window
     SDL_DestroyWindow(window);
     //quit sdl

@@ -1,36 +1,57 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "sdlpart.h"
+#include "lifegame.h"
 
 //Determine if the cell is alive or dead
 //1:alive
 //0:dead
 int cell(int celllife, int neighbour){
+    //Cell survival condition
     if(celllife == 0 && neighbour == 3) return 1;
-    if(celllife == 1){
-        if(neighbour <= 1 || neighbour > 3) return 0;
-        else return 1;
-    }
+    if(celllife == 1) if(neighbour == 2 || neighbour == 3) return 1;
+    return 0;
 }
 
 //Get cell map's row and column
-//-2: no file
-//0: initialization succeeded
+//-2: file is wrong
+//-1: file is null
+//0: no file
+//1: initialization succeeded
 int init(int* row, int *column, char* filename){
+    //The file pointer
     FILE *fp;
     char a[300];
-    int i, j;
+    //i: row
+    //j: column
+    //k: temp
+    int i, j, k;
     fp = fopen(filename, "r");
-    if(fp == NULL) return -1;
-    if(fgets(a, 250, fp) == NULL) return -2;
-    for(i = 0, j = 0; i < strlen(a) && a[i] != '\r' && a[i] != '\n'; i++){
-        if(a[i] == '0' || a[i] == '1') j++;
+    if(fp == NULL) return 0;
+    if(fgets(a, 250, fp) == NULL) return -1;
+    for(i = 0; i < strlen(a) ; i++){
+    	if(a[i] == '\r' || a[i] == '\n') {
+            a[i] = '\0';
+            break;
+    	}
+        if(a[i] < '0' || a[i] > '9') return -2;
+    }
+    delay = atoi(a);
+    if(delay > 100) rewind(fp);
+    for(i = 0; fgets(a, 250, fp) != NULL; i++){
+        j = 0;
+        while(j < strlen(a) && a[j] != '\r' && a[j] != '\n'){
+            if(a[j] != '0' && a[j] != '1') return -2;
+            j++;
+        }
+        if(i > 1 && j != k) return -2;
+        k = j;
     }
     *column = j;
-    for(j = 1; fgets(a, 250, fp) != NULL; j++);
-    *row = j;
+    *row = i;
     fclose(fp);
-    return 0;
+    return 1;
 }
 
 //chose model
@@ -39,15 +60,14 @@ int opt(void){
     char txt[10];
     printf("Which model do you want(A/M): ");
     while(1){
-        fgets(txt, 5, stdin);
+        fgets(txt, 2, stdin);
         for(i = strlen(txt)-1; txt[i]== '\n' || txt[i]== '\r' ; i--){
             txt[i] = '\0';
         }
         if(strcmp(txt,"A") == 0) return 0;
         else if(strcmp(txt,"M") == 0) return 1;
         else {
-            while(fgets(txt, 8, stdin) != NULL) printf("1\n");
-            
+            if(txt[strlen(txt)-1] != '\r' && txt[strlen(txt)-1] != '\n')  while(getchar()!='\n');
             printf("Invalid input, please re-enter(A/M): ");
         }
     }
@@ -67,13 +87,16 @@ void commandline(int ac, char *av[], int *step, char *filename){
             do{
                 printf("Invalid file name!\nPlease re-enter: ");
                 fgets(filename,250,stdin);
+                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
                 for(i = strlen(filename); filename[i-1] == '\n' || filename[i-1] =='\r'; i--) filename[i-1] = '\0';
-                while(fgets(temp,190,stdin));
             }while(filename[strlen(filename)-1] != 't' || filename[strlen(filename)-2] != 'x' || filename[strlen(filename)-3] != 't' || filename[strlen(filename)-4] != '.');
         }else{
             strcpy(filename, av[1]);
         }
         if(ac > 2){
+            if(ac > 3){
+                printf("Invalid output has been ignored!\n");
+            }
             int len2 = strlen(av[2]);
             for(i = 0; i < len2; num++, i++){
                 if(av[2][i] < '0' || av[2][i] > '9') break;
@@ -84,6 +107,7 @@ void commandline(int ac, char *av[], int *step, char *filename){
                 while(1){
                     printf("Invalid step!\nPlease re-enter: ");
                     fgets(temp,190,stdin);
+                    if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
                     for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
                     len2 = strlen(temp);
                     for(i = 0; i < len2; num++, i++){
@@ -91,21 +115,32 @@ void commandline(int ac, char *av[], int *step, char *filename){
                     }
                     if(i == len2){
                         *step = atoi(temp);
-                        while(fgets(temp,190,stdin));
                         break;
                     }
-                    while(fgets(temp,190,stdin));
                 }
             }
         }else{
-            printf("Invalid output has been ignored!\n");
+            while(1){
+                printf("Invalid step!\nPlease re-enter: ");
+                fgets(temp,190,stdin);
+                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
+                int len2 = strlen(temp);
+                for(i = 0; i < len2; num++, i++){
+                    if(temp[i] < '0' || temp[i] > '9')  break;
+                }
+                if(i == len2){
+                    *step = atoi(temp);
+                    break;
+                }
+            }
         }
     }else{
         do{
             printf("Invalid file name!\nPlease re-enter: ");
             fgets(filename,250,stdin);
+            if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
             for(i = strlen(filename); filename[i-1] == '\n' || filename[i-1] =='\r'; i--) filename[i-1] = '\0';
-            while(fgets(temp,190,stdin));
         }while(filename[strlen(filename)-1] != 't' || filename[strlen(filename)-2] != 'x' || filename[strlen(filename)-3] != 't' || filename[strlen(filename)-4] != '.');
         while(1){
             printf("Invalid step!\nPlease re-enter: ");
@@ -113,16 +148,32 @@ void commandline(int ac, char *av[], int *step, char *filename){
             for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
             int len2 = strlen(temp);
             for(i = 0; i < len2; num++, i++){
-               if(temp[i] < '0' || temp[i] > '9') break;
+                if(temp[i] < '0' || temp[i] > '9') {
+                    if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                    continue;
+                }
             }
             if(i == len2){
                 *step = atoi(temp);
-                while(fgets(temp,190,stdin));
+                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
                 break;
             }
-            while(fgets(temp,190,stdin));
+            if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
          }
     }
 }
 
-
+//Write the result to a file
+void writefile(char* filename, int row, int column,  int* start[]){
+    int i, j;
+    //Write files
+    FILE* fp = fopen(filename, "w");
+    fprintf(fp,"%d\n",delay);
+    for(i = 0; i < row; i++){
+        for(j = 0; j < column; j++){
+            fprintf(fp,"%d",start[i][j]);
+        }
+        fprintf(fp,"\n");
+    }
+    fclose(fp);
+}
