@@ -5,7 +5,6 @@
 #include "sdlpart.h"
 #include "lifegame.h"
 
-
 int main(int argc, char *argv[]){
     //step number
     int step = -100;

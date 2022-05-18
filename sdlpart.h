@@ -10,7 +10,6 @@ int mousey;
 //delaytime
 int delay;
 
-
 int judgeinput(int opt, int num, int time);
 
 //Draw border lines

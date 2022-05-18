@@ -5,7 +5,6 @@
 
 int delaytime;
 
-
 //Determine if the cells are alive
 int cell(int celllife, int neighbour);
 
