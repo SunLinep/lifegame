@@ -4,6 +4,7 @@
 #include "sdlpart.h"
 #include "lifegame.h"
 
+
 //Determine if the cell is alive or dead
 //1:alive
 //0:dead

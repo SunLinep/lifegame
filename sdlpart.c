@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "sdlpart.h"
 
+
 //opt: 0 delay 1s
 //opt: 1 keystrokes
 //Press the right mouse button: return 1
