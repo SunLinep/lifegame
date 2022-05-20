@@ -8,7 +8,18 @@
 //Press esc: return -1
 int judgeinput(int opt, int num, int time){
     if(opt == 0){
-        SDL_Delay(time*1000);
+        Uint32 last = SDL_GetTicks();
+        Uint32 current = last;
+        while(current <= last+1000*time){
+            const Uint8 *state = SDL_GetKeyboardState(NULL);
+            SDL_PumpEvents();
+            if(state[SDL_SCANCODE_ESCAPE]){
+                //Press the Esc key on the keyboard
+                return -1;
+            }
+            current = SDL_GetTicks();
+        }
+        //SDL_Delay(time*1000);
     }else if(opt == 1){
         while(1){
             //KeyboardState

@@ -4,7 +4,6 @@
 #include "sdlpart.h"
 #include "lifegame.h"
 
-
 //Determine if the cell is alive or dead
 //1:alive
 //0:dead
@@ -121,20 +120,33 @@ void commandline(int ac, char *av[], int *step, char *filename){
                 }
             }
         }else{
+            char a[5];
             while(1){
-                printf("Invalid step!\nPlease re-enter: ");
-                fgets(temp,190,stdin);
-                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
-                for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
-                int len2 = strlen(temp);
-                for(i = 0; i < len2; num++, i++){
-                    if(temp[i] < '0' || temp[i] > '9')  break;
-                }
-                if(i == len2){
-                    *step = atoi(temp);
+                printf("Do you want to set the number of iterations?(Y/N) :");
+                fgets(a, 4, stdin);
+                if(a[strlen(a)-1] != '\r' && a[strlen(a)-1] != '\n')  while(getchar()!='\n');
+                for(i = strlen(a); a[i-1] == '\n' || a[i-1] =='\r'; i--) a[i-1] = '\0';
+                if(strcmp(a,"N") == 0) break;
+                else if(strcmp(a,"Y") == 0){
+                    while(1){
+                        printf("Invalid step!\nPlease re-enter: ");
+                        fgets(temp,190,stdin);
+                        if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                        for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
+                        int len2 = strlen(temp);
+                        for(i = 0; i < len2; num++, i++){
+                            if(temp[i] < '0' || temp[i] > '9')  break;
+                        }
+                        if(i == len2){
+                            *step = atoi(temp);
+                            break;
+                        }
+                    }
                     break;
+                }else{
+                    printf("Wrong input! Please re-enter!\n");
                 }
-            }
+            }    
         }
     }else{
         do{
@@ -143,24 +155,33 @@ void commandline(int ac, char *av[], int *step, char *filename){
             if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
             for(i = strlen(filename); filename[i-1] == '\n' || filename[i-1] =='\r'; i--) filename[i-1] = '\0';
         }while(filename[strlen(filename)-1] != 't' || filename[strlen(filename)-2] != 'x' || filename[strlen(filename)-3] != 't' || filename[strlen(filename)-4] != '.');
+        char a[5];
         while(1){
-            printf("Invalid step!\nPlease re-enter: ");
-            fgets(temp,190,stdin);
-            for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
-            int len2 = strlen(temp);
-            for(i = 0; i < len2; num++, i++){
-                if(temp[i] < '0' || temp[i] > '9') {
+            printf("Do you want to set the number of iterations?(Y/N) :");
+            fgets(a, 4, stdin);
+            if(a[strlen(a)-1] != '\r' && a[strlen(a)-1] != '\n')  while(getchar()!='\n');
+            for(i = strlen(a); a[i-1] == '\n' || a[i-1] =='\r'; i--) a[i-1] = '\0';
+            if(strcmp(a,"N") == 0) break;
+            else if(strcmp(a,"Y") == 0){
+                while(1){
+                    printf("Invalid step!\nPlease re-enter: ");
+                    fgets(temp,190,stdin);
                     if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
-                    continue;
+                    for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
+                    int len2 = strlen(temp);
+                    for(i = 0; i < len2; num++, i++){
+                        if(temp[i] < '0' || temp[i] > '9')  break;
+                    }
+                    if(i == len2){
+                        *step = atoi(temp);
+                        break;
+                    }
                 }
-            }
-            if(i == len2){
-                *step = atoi(temp);
-                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
                 break;
+            }else{
+                printf("Wrong input! Please re-enter!\n");
             }
-            if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
-         }
+        }
     }
 }
 
