@@ -2,7 +2,7 @@
 ## The URL of the git repository
 https://github.com/SunLinep/lifegame
 ## A screenshot of the git commit history
-![image](https://user-images.githubusercontent.com/96744742/169681934-2e2417f2-cac1-47f3-b980-dd36cafbb0ad.png)
+![image](https://user-images.githubusercontent.com/96744742/169681969-b649b26b-bec4-45bd-b227-361bc5ee0ec7.png)
 ## Instructions on how to run the program
 #### 1.Use makefile to build the program
 #### 2.Use command-line arguments to start the program
