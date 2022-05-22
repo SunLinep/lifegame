@@ -108,7 +108,7 @@ int main(void){
             exit(EXIT_FAILURE);
         }
         CU_basic_set_mode(CU_BRM_VERBOSE);
-        CU_basic_run_tests();
+        CU_basic_run_tests();        
     }
 }
 
