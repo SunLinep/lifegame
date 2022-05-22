@@ -79,7 +79,7 @@ void drawline(SDL_Window *window, SDL_Surface *screen, int x, int y){
     int i;
     //Drew column
     for(i = 0; i <= x; i++){
-        SDL_Rect line = {i*100,0,1,100*y};
+        SDL_Rect line = {i*range,0,1,range*y};
         //Gray line
         SDL_FillRect(screen,&line, SDL_MapRGB(screen->format, 128, 128, 128));
         //update surface
@@ -87,7 +87,7 @@ void drawline(SDL_Window *window, SDL_Surface *screen, int x, int y){
     }
     //Draw lines line
     for(i = 0; i <= y; i++){
-        SDL_Rect line = {0,i*100,100*x,1};
+        SDL_Rect line = {0,i*range,range*x,1};
         //Gray line
         SDL_FillRect(screen,&line, SDL_MapRGB(screen->format, 128, 128, 128));
         //update surface
@@ -100,7 +100,7 @@ void drawline(SDL_Window *window, SDL_Surface *screen, int x, int y){
 //num 0: dead cell
 void drawrectangle(SDL_Window *window, SDL_Surface *screen, int x, int y, int num){
     //rectangular
-    SDL_Rect rect = {x,y,100,100};
+    SDL_Rect rect = {x,y,range,range};
     //black color
     if(num == 1) SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, 0, 0, 0));
     //white color
@@ -108,3 +108,4 @@ void drawrectangle(SDL_Window *window, SDL_Surface *screen, int x, int y, int nu
     //update surface
     SDL_UpdateWindowSurface(window);
 }
+

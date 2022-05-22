@@ -9,6 +9,8 @@ int mousex;
 int mousey;
 //delaytime
 int delay;
+//range
+int range;
 
 int judgeinput(int opt, int num, int time);
 

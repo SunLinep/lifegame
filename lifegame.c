@@ -23,7 +23,8 @@ int init(int* row, int *column, char* filename){
     //The file pointer
     FILE *fp;
     char a[300];
-    //i: row    j: column
+    //i: row
+    //j: column
     //k: temp
     int i, j, k;
     fp = fopen(filename, "r");
@@ -59,14 +60,14 @@ int opt(void){
     char txt[10];
     printf("Which model do you want(A/M): ");
     while(1){
-        fgets(txt, 2, stdin);
+        fgets(txt, 4, stdin);
+        if(txt[strlen(txt)-1] != '\n' && txt[strlen(txt)-1] != 127 && txt[strlen(txt)-1] != 25) while(getchar()!='\n');
         for(i = strlen(txt)-1; txt[i]== '\n' || txt[i]== '\r' ; i--){
             txt[i] = '\0';
         }
         if(strcmp(txt,"A") == 0) return 0;
         else if(strcmp(txt,"M") == 0) return 1;
         else {
-            if(txt[strlen(txt)-1] != '\r' && txt[strlen(txt)-1] != '\n')  while(getchar()!='\n');
             printf("Invalid input, please re-enter(A/M): ");
         }
     }
@@ -86,7 +87,7 @@ void commandline(int ac, char *av[], int *step, char *filename){
             do{
                 printf("Invalid file name!\nPlease re-enter: ");
                 fgets(filename,250,stdin);
-                if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
                 for(i = strlen(filename); filename[i-1] == '\n' || filename[i-1] =='\r'; i--) filename[i-1] = '\0';
             }while(filename[strlen(filename)-1] != 't' || filename[strlen(filename)-2] != 'x' || filename[strlen(filename)-3] != 't' || filename[strlen(filename)-4] != '.');
         }else{
@@ -106,7 +107,7 @@ void commandline(int ac, char *av[], int *step, char *filename){
                 while(1){
                     printf("Invalid step!\nPlease re-enter: ");
                     fgets(temp,190,stdin);
-                    if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                    if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
                     for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
                     len2 = strlen(temp);
                     for(i = 0; i < len2; num++, i++){
@@ -123,14 +124,14 @@ void commandline(int ac, char *av[], int *step, char *filename){
             while(1){
                 printf("Do you want to set the number of iterations?(Y/N) :");
                 fgets(a, 4, stdin);
-                if(a[strlen(a)-1] != '\r' && a[strlen(a)-1] != '\n')  while(getchar()!='\n');
+                if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
                 for(i = strlen(a); a[i-1] == '\n' || a[i-1] =='\r'; i--) a[i-1] = '\0';
                 if(strcmp(a,"N") == 0) break;
                 else if(strcmp(a,"Y") == 0){
                     while(1){
                         printf("Invalid step!\nPlease re-enter: ");
                         fgets(temp,190,stdin);
-                        if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                        if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
                         for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
                         int len2 = strlen(temp);
                         for(i = 0; i < len2; num++, i++){
@@ -151,21 +152,21 @@ void commandline(int ac, char *av[], int *step, char *filename){
         do{
             printf("Invalid file name!\nPlease re-enter: ");
             fgets(filename,250,stdin);
-            if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+            if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
             for(i = strlen(filename); filename[i-1] == '\n' || filename[i-1] =='\r'; i--) filename[i-1] = '\0';
         }while(filename[strlen(filename)-1] != 't' || filename[strlen(filename)-2] != 'x' || filename[strlen(filename)-3] != 't' || filename[strlen(filename)-4] != '.');
         char a[5];
         while(1){
             printf("Do you want to set the number of iterations?(Y/N) :");
             fgets(a, 4, stdin);
-            if(a[strlen(a)-1] != '\r' && a[strlen(a)-1] != '\n')  while(getchar()!='\n');
+            if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
             for(i = strlen(a); a[i-1] == '\n' || a[i-1] =='\r'; i--) a[i-1] = '\0';
             if(strcmp(a,"N") == 0) break;
             else if(strcmp(a,"Y") == 0){
                 while(1){
                     printf("Invalid step!\nPlease re-enter: ");
                     fgets(temp,190,stdin);
-                    if(temp[strlen(temp)-1] != '\r' && temp[strlen(temp)-1] != '\n')  while(getchar()!='\n');
+                    if(temp[strlen(temp)-1] != '\n' && temp[strlen(temp)-1] != 127 && temp[strlen(temp)-1] != 25) while(getchar()!='\n');
                     for(i = strlen(temp); temp[i-1] == '\n' || temp[i-1] =='\r'; i--) temp[i-1] = '\0';
                     int len2 = strlen(temp);
                     for(i = 0; i < len2; num++, i++){

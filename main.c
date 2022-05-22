@@ -10,6 +10,8 @@ int main(int argc, char *argv[]){
     int step = -100;
     //filename
     char filename[300];
+    //range
+    range = 100;
     //Process command line arguments
     commandline(argc, argv, &step, filename);
     //Automatic or manual selection
@@ -43,6 +45,19 @@ int main(int argc, char *argv[]){
         printf("This is a wrong file!\n");
         return 0;
     }
+    if(MAXrow > 8 || MAXcolumn > 15){
+        if(MAXrow > 8){
+    	    for(j = range; j > 0; j--){
+    	        if(j * MAXrow > 700 && j * MAXrow < 800) break;
+    	    }
+        }else j = range;
+        if(MAXcolumn > 15){
+            for(i = range; i > 0; i--){
+    	        if(i * MAXcolumn > 1400 && i * MAXcolumn < 1500) break;
+    	    }
+        }else i = range;
+        range = i<j?i:j;
+    }
     //The initial state
     int **start = (int **)malloc(MAXrow* sizeof(int *));
     //Next state
@@ -55,7 +70,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
     //Initialize window
-    window = SDL_CreateWindow("LifeGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, MAXcolumn*100+1, MAXrow*100+1, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("LifeGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, MAXcolumn*range+1, MAXrow*range+1, SDL_WINDOW_SHOWN);
     //Check whether the window is successfully initialized
     if(!window){
         printf("Window could not initialize! SDL_Error: %s\n",SDL_GetError());
@@ -73,7 +88,7 @@ int main(int argc, char *argv[]){
         for(i = 0; i < strlen(a) && a[i] != '\r' && a[i] != '\n'; i++){
             if(a[i] != '1' && a[i] != '0') return -3;
             start[j][i] = a[i] - '0';
-            if(start[j][i]==1) drawrectangle(window, screen, 100 * i, j * 100, 1);
+            if(start[j][i]==1) drawrectangle(window, screen, range * i, j * range, 1);
         }
     }
     drawline(window, screen, MAXcolumn, MAXrow);
@@ -82,15 +97,15 @@ int main(int argc, char *argv[]){
             writefile(filename, MAXrow, MAXcolumn,  start);
             return 0;
         }
-        if(mousex%100 == 0 || mousey%100 == 0) continue;
-        if(start[mousey/100][mousex/100] == 0){
-            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 1);
+        if(mousex%range == 0 || mousey%range == 0) continue;
+        if(start[mousey/range][mousex/range] == 0){
+            drawrectangle(window, screen, mousex/range*range, mousey/range*range, 1);
             drawline(window, screen, MAXcolumn, MAXrow);
-            start[mousey/100][mousex/100] = 1;
-        }else if(start[mousey/100][mousex/100] == 1){
-            drawrectangle(window, screen, mousex/100*100, mousey/100*100, 0);
+            start[mousey/range][mousex/range] = 1;
+        }else if(start[mousey/range][mousex/range] == 1){
+            drawrectangle(window, screen, mousex/range*range, mousey/range*range, 0);
             drawline(window, screen, MAXcolumn, MAXrow);
-            start[mousey/100][mousex/100] = 0;
+            start[mousey/range][mousex/range] = 0;
         }
     }
     //Initialize Next and Temp state
@@ -131,7 +146,7 @@ int main(int argc, char *argv[]){
             for(j = 0; j < MAXcolumn; j++){
                 temp[i][j] = start[i][j];
                 if((start[i][j] = next[i][j])==1){
-                    drawrectangle(window, screen, 100 * j, i * 100, 1);
+                    drawrectangle(window, screen, range * j, i * range, 1);
                     sum++;
                 }
             }
